@@ -41,6 +41,11 @@ def _new_generator_command(ctx, declared_dir, rjars):
         output = declared_dir.path,
     )
 
+    if ctx.attr.cli_args:
+        gen_cmd += ' {cli_args}'.format(
+	    cli_args = ctx.attr.cli_args
+        )
+
     gen_cmd += ' -p "{properties}"'.format(
         properties = _comma_separated_pairs(ctx.attr.system_properties),
     )
@@ -166,6 +171,7 @@ _openapi_generator = rule(
         "engine": attr.string(),
         "type_mappings": attr.string_dict(),
         "reserved_words_mappings": attr.string_list(),
+        "cli_args": attr.string(),
         "is_windows": attr.bool(mandatory = True),
         "_jdk": attr.label(
             default = Label("@bazel_tools//tools/jdk:current_java_runtime"),
